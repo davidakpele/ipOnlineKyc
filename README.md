@@ -305,7 +305,8 @@ $smarty->setConfigDir(__DIR__ . '/configs');
 
 ```
 ## Controller and View
-###HomeController 
+
+### HomeController 
 
 - To display Default or Home page
 
@@ -335,7 +336,7 @@ final class HomeController extends Controller {
 
 ## AuthController 
 
-- responsible to display and handle register authentications
+- responsible to rendering view and handling register validation & authentications
 
 ```php
 <?php
@@ -445,7 +446,7 @@ class AuthController extends Controller {
         </head>
 <body>
 <body>
-    <h1>Welcome, {$name}!</h1>
+   **Body section**
 </body>
 </html>
 ```
