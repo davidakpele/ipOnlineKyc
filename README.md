@@ -146,8 +146,7 @@ class Application {
     }
 }
 ?>
-
-		
+```	
 ## Controller.php
 ```php
 <?php 
@@ -170,7 +169,7 @@ Class Controller
  		return false;
 	}
 }
-
+```
 ## User Class Validation
 
 ```php
@@ -229,7 +228,7 @@ class User {
         return $errors;
     }
 }
-
+```
 ## Template Rendering
 ### config.php
 
@@ -247,7 +246,7 @@ $smarty->setTemplateDir([
 $smarty->setCompileDir(__DIR__ . '/templates_c');
 $smarty->setCacheDir(__DIR__ . '/cache');
 $smarty->setConfigDir(__DIR__ . '/configs');
-
+```
 ## Controller and View
 
 ```php
@@ -276,7 +275,7 @@ final class HomeController extends Controller {
     }
 
 }
-
+```
 ### index.tpl
 ```tpl
 <!DOCTYPE html>
@@ -306,7 +305,7 @@ final class HomeController extends Controller {
     <h1>Welcome, {$name}!</h1>
 </body>
 </html>
-
+```
 ## Challenges Faced
 - **Smarty Integration:** Integrating Smarty required careful configuration to ensure templates were correctly rendered and cached.
 - **Form Validation:** Developing a robust validation mechanism that was both flexible and reusable posed a significant challenge.
