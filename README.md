@@ -457,7 +457,7 @@ class AuthController extends Controller {
 
 #Please NOTE
 ### .env file include **Configuration settings**
-
+```env
 > DB_TYPE= mysql
 > DB_NAME=iponlinedb
 > DB_HOST=localhost
@@ -467,7 +467,7 @@ class AuthController extends Controller {
 > API_SECURITY_KEY="ILkPI+DONM0+3vzk6Kvfe548tu4czCuqU8BGVOlnp6I"
 > API_SECURITY_SALT="762481131"
 > API_SECURITY_HASH="sha256"
-
+```
 - Database was included on this project just to make sense out of project recon List.
 - **/core/database.php class file** define some of the database functions you might need, some of the function are the follow
 - **execute();**  to insert, update, delete, truncate data in a table
