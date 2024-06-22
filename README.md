@@ -470,10 +470,11 @@ class AuthController extends Controller {
 ```
 - A database was included in this project to give context to the project Recon List.
 - The /core/database.php class file defines some database functions you might need. Some of the functions are as follows:
+```note
 - **execute();**  to insert, update, delete, truncate data in a table
 - **fetch_array()** to fetch data associate array
 - **single()** to fetch single row from a table
 - **rowCount()** to count row in a table and lastly we have
 - **query()** Allows us to write queries
 - **bind()** this is use to Bind values
-
+```
