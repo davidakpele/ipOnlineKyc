@@ -108,7 +108,7 @@ ipOline/
 ```
 ## Core Components
 **Application.php**
-```
+```php
 <?php
 class Application {
     protected $controller = 'HomeController';
@@ -147,9 +147,9 @@ class Application {
 }
 ?>
 
-```		
+		
 ## Controller.php
-```
+```php
 <?php 
 Class Controller
 {
@@ -170,10 +170,10 @@ Class Controller
  		return false;
 	}
 }
-```
+
 ## User Class Validation
 
-```
+```php
 <?php
  namespace Services\Validate\Request;
  
@@ -229,11 +229,11 @@ class User {
         return $errors;
     }
 }
-```
+
 ## Template Rendering
 ### config.php
 
-```
+```php
 <?php
 require_once('vendor/smarty/smarty/libs/Smarty.class.php');
 
@@ -247,10 +247,10 @@ $smarty->setTemplateDir([
 $smarty->setCompileDir(__DIR__ . '/templates_c');
 $smarty->setCacheDir(__DIR__ . '/cache');
 $smarty->setConfigDir(__DIR__ . '/configs');
-```
+
 ## Controller and View
 
-```
+```php
 <?php
 final class HomeController extends Controller {
 
@@ -276,9 +276,9 @@ final class HomeController extends Controller {
     }
 
 }
-```
+
 ### index.tpl
-```
+```tpl
 <!DOCTYPE html>
     <html lang="en">
         <head>
@@ -306,7 +306,7 @@ final class HomeController extends Controller {
     <h1>Welcome, {$name}!</h1>
 </body>
 </html>
-```
+
 ## Challenges Faced
 - **Smarty Integration:** Integrating Smarty required careful configuration to ensure templates were correctly rendered and cached.
 - **Form Validation:** Developing a robust validation mechanism that was both flexible and reusable posed a significant challenge.
