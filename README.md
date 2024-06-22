@@ -454,3 +454,26 @@ class AuthController extends Controller {
 - **Smarty Integration:** Integrating Smarty required careful configuration to ensure templates were correctly rendered and cached.
 - **Form Validation:** Developing a robust validation mechanism that was both flexible and reusable posed a significant challenge.
 - **URL Parsing:** Ensuring accurate and secure URL parsing to handle controller and method routing without exposing vulnerabilities.
+
+#Please NOTE
+### .env file include **Configuration settings**
+
+> DB_TYPE= mysql
+> DB_NAME=iponlinedb
+> DB_HOST=localhost
+> DB_USER=root
+> DB_PASS=''
+> DB_CHARSET=binary
+> API_SECURITY_KEY="ILkPI+DONM0+3vzk6Kvfe548tu4czCuqU8BGVOlnp6I"
+> API_SECURITY_SALT="762481131"
+> API_SECURITY_HASH="sha256"
+
+- Database was included on this project just to make sense out of project recon List.
+- **/core/database.php class file** define some of the database functions you might need, some of the function are the follow
+- **execute();**  to insert, update, delete, truncate data in a table
+- **fetch_array()** to fetch data associate array
+- **single()** to fetch single row from a table
+- **rowCount()** to count row in a table and lastly we have
+- **query()** Allows us to write queries
+- **bind()** this is use to Bind values
+
