@@ -25,7 +25,7 @@
 3. Set up your web server to point to the **public **directory.
 
 ## Folder Structure
-
+```
 ipOline/
 ├───app
 │   ├───controllers
@@ -105,7 +105,7 @@ ipOline/
         └───polyfill-mbstring
             └───Resources
                 └───unidata
-
+```
 ## Core Components
 **Application.php**
 
