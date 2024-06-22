@@ -468,8 +468,8 @@ class AuthController extends Controller {
 > API_SECURITY_SALT="762481131"
 > API_SECURITY_HASH="sha256"
 ```
-- Database was included on this project just to make sense out of project recon List.
-- **/core/database.php class file** define some of the database functions you might need, some of the function are the follow
+- A database was included in this project to give context to the project Recon List.
+- The /core/database.php class file defines some database functions you might need. Some of the functions are as follows:
 - **execute();**  to insert, update, delete, truncate data in a table
 - **fetch_array()** to fetch data associate array
 - **single()** to fetch single row from a table
