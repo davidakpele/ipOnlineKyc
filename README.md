@@ -109,43 +109,68 @@ ipOline/
 ## Core Components
 **Application.php**
 ```php
+
 <?php
 class Application {
-    protected $controller = 'HomeController';
-    protected $method = 'index';
-    protected $params = [];
+    // Default controller and method
+    protected $controller = 'HomeController'; 
+    protected $method = 'index'; 
+    protected $params = []; // Parameters for methods
 
+    // Constructor method that initializes the application
     public function __construct() {
+        // Parse the URL to get controller, method, and parameters
         $this->parseUrl();
 
+        // Check if the controller file exists
         if (file_exists('../app/controllers/' . $this->controller . '.php')) {
+            // Include the controller file
             require_once '../app/controllers/' . $this->controller . '.php';
+            // Instantiate the controller
             $this->controller = new $this->controller();
         } else {
+            // Display an error if the controller file is not found
             echo "Controller not found.";
             return;
         }
 
+        // Check if the method exists in the controller
         if (method_exists($this->controller, $this->method)) {
+            // Call the method with parameters
             call_user_func_array([$this->controller, $this->method], $this->params);
         } else {
+            // Display an error if the method is not found
             echo "Method not found.";
             return;
         }
     }
+
+    // Method to parse the URL
     public function parseUrl() {
+        // Check if 'url' is set in the GET request
         if (isset($_GET['url'])) {
+            // Trim the trailing slash
             $url = rtrim($_GET['url'], '/');
+            // Sanitize the URL
             $url = filter_var($url, FILTER_SANITIZE_URL);
+            // Split the URL into an array
             $url = explode('/', $url);
+
+            // Set the controller from the URL, or default to 'HomeController'
             $this->controller = isset($url[0]) ? ucfirst($url[0]) . 'Controller' : 'HomeController';
+            // Set the method from the URL, or default to 'index'
             $this->method = isset($url[1]) ? $url[1] : 'index';
+            // Remove the controller and method from the URL array
             unset($url[0], $url[1]);
+
+            // Rebase the array and assign remaining values as parameters
             $this->params = $url ? array_values($url) : [];
         }
     }
 }
 ?>
+
+
 ```	
 ## Controller.php
 ```php
