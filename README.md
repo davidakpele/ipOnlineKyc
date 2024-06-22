@@ -175,104 +175,139 @@ class Application {
 ## Controller.php
 ```php
 <?php 
-Class Controller
+class Controller
 {
-	protected function view($view,$data = []){
-		if(file_exists("../app/views/". $view .".php"))
- 		{
- 			include "../app/views/". $view .".php";
- 		}else{
- 			include "../app/views/DeniedAccess.php";
- 		}
-	} 
+    // Method to load a view
+    protected function view($view, $data = []){
+        // Check if the view file exists
+        if(file_exists("../app/views/". $view .".php")) {
+            // Include the view file
+            include "../app/views/". $view .".php";
+        } else {
+            // If the view file doesn't exist, include an error view
+            include "../app/views/DeniedAccess.php";
+        }
+    } 
 
-	protected function loadModel($model){
-		if(file_exists("../app/models/". $model .".php")){
- 			include "../app/models/". $model .".php";
- 			return $model = new $model();
- 		}
- 		return false;
-	}
+    // Method to load a model
+    protected function loadModel($model){
+        // Check if the model file exists
+        if(file_exists("../app/models/". $model .".php")) {
+            // Include the model file
+            include "../app/models/". $model .".php";
+            // Instantiate and return the model object
+            return $model = new $model();
+        }
+        // If the model file doesn't exist, return false
+        return false;
+    }
 }
 ```
 ## User Class Validation
 
 ```php
-<?php
- namespace Services\Validate\Request;
- 
+
+  <?php
+namespace Services\Validate\Request;
+
+// User class for handling user data and validation
 class User {
     public $username;
     public $email;
     public $password;
 
+    // Constructor to initialize User object
     public function __construct($username, $email, $password) {
         $this->username = $username;
         $this->email = $email;
         $this->password = $password;
-        
     }
 
+    // Method to validate username format
     public function validateUsername() {
         return preg_match('/^[a-zA-Z0-9]{3,20}$/', $this->username);
     }
 
+    // Method to validate email format
     public function validateEmail() {
         return filter_var($this->email, FILTER_VALIDATE_EMAIL);
     }
 
+    // Method to validate password strength
     public function validatePassword() {
         return preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/', $this->password);
     }
 
+    // Method to validate all user inputs and return errors if any
     public function validate() {
         $errors = [
-            'username' => '',
-            'email' => '',
-            'password' => ''
+            'username' => '', // Initialize error message for username
+            'email' => '',    // Initialize error message for email
+            'password' => ''  // Initialize error message for password
         ];
 
+        // Check if username is empty
         if (empty($this->username)) {
             $errors['username'] = "Username is required.";
         } elseif (!$this->validateUsername()) {
+            // Validate username format
             $errors['username'] = "Username must be alphanumeric and between 3-20 characters.";
         }
 
+        // Check if email is empty
         if (empty($this->email)) {
             $errors['email'] = "Email is required.";
         } elseif (!$this->validateEmail()) {
+            // Validate email format
             $errors['email'] = "Invalid email format.";
         }
 
+        // Check if password is empty
         if (empty($this->password)) {
             $errors['password'] = "Password is required.";
         } elseif (!$this->validatePassword()) {
+            // Validate password strength
             $errors['password'] = "Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, and one number.";
         }
 
-        return $errors;
+        return $errors; // Return the errors array
     }
-}
+}  
 ```
 ## Template Rendering
 ### config.php
 
 ```php
 <?php
+// Include the Smarty class
 require_once('vendor/smarty/smarty/libs/Smarty.class.php');
 
+// Use the Smarty namespace
 use Smarty\Smarty;
+
+// Create a new Smarty object
 $smarty = new Smarty();
 
+// Set the directory for Smarty templates
 $smarty->setTemplateDir([
-    __DIR__ . '/app/views/templates',
-    __DIR__ . '/app/views/templates/auth',
+    __DIR__ . '/app/views/templates',       // Main templates directory
+    __DIR__ . '/app/views/templates/auth',  // Additional templates directory for authentication views
 ]);
+
+// Set the directory for compiled templates
 $smarty->setCompileDir(__DIR__ . '/templates_c');
+
+// Set the directory for cache
 $smarty->setCacheDir(__DIR__ . '/cache');
+
+// Set the directory for configuration files
 $smarty->setConfigDir(__DIR__ . '/configs');
+
 ```
 ## Controller and View
+###HomeController 
+
+- To display Default or Home page
 
 ```php
 <?php
@@ -295,11 +330,94 @@ final class HomeController extends Controller {
         $this->smarty->display('index.tpl');
     }
 
-    public function about(){
-        $this->smarty->display('about.tpl');
+}
+```
+
+## AuthController 
+
+- responsible to display and handle register authentications
+
+```php
+<?php
+
+use Request\Method\RequestHelper;
+use Services\Validate\Request\User;
+
+class AuthController extends Controller {
+
+    private $smarty;
+    private $store_db_model;
+
+    public function __construct() {
+        global $smarty;
+        $this->smarty = $smarty;
+        $this->store_db_model = $this->loadModel('UserRepository');
     }
 
+    public function register(){
+        //check method
+        if (RequestHelper::isRequestMethod('POST')) {
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+            $response = array();
+            $errors = array(
+                'username' => '',
+                'email' => '',
+                'password' => ''
+            );
+            $username= isset($_POST['username'])? strip_tags(trim(filter_var($_POST['username'], FILTER_SANITIZE_STRING))):'';
+            $email= isset($_POST['email'])? strip_tags(trim(filter_var($_POST['email'], FILTER_SANITIZE_STRING))):'';
+            $password= isset($_POST['password'])? strip_tags(trim(filter_var($_POST['password'], FILTER_SANITIZE_STRING))):'';
+
+            $user = new User($username, $email, $password);
+            $validationErrors = $user->validate();
+
+            if (empty($validationErrors['username']) && empty($validationErrors['email']) && empty($validationErrors['password'])) {
+                //check if username and email already been used.
+
+                if ($this->store_db_model->findUserByEmail($email)) {
+                    $errors['email'] = "Email already in used by another user, please choose a different email address.";
+                }
+                if ($this->store_db_model->findUserByUsername($username)) {
+                    $errors['username'] = "This username has already been taken by a user, please choose a different username.";
+                }else{
+                    //hash password using password_hash() Argon2i
+                    $hash_password = password_hash($password, PASSWORD_ARGON2ID);
+                    if($this->store_db_model->save_user($username, $email, $hash_password)){
+                        $response['success'] = array('status' => 'success', 'details' => 'Registration successful! Welcome, ' . htmlspecialchars($user->username) . '.', http_response_code(201));
+                    }else{
+                        $errors['username'] = "Unable to register user at this time, please try again later.";
+                    }
+                }
+            } else {
+                $errors = array_merge($errors, $validationErrors);
+            }
+            $this->smarty->assign('errors', $errors);
+            $this->smarty->assign('success', isset($response['success']) ? $response['success'] : null);
+            $this->smarty->assign('submitted_username', isset($username) ? htmlspecialchars($username) : '');
+            $this->smarty->assign('submitted_email', isset($email) ? htmlspecialchars($email) : '');
+            $this->smarty->assign('submitted_password', isset($password) ? htmlspecialchars($password) : '');
+        }else {
+            $this->smarty->assign('errors', array('username' => '', 'email' => '', 'password' => ''));
+            $this->smarty->assign('submitted_username', '');
+            $this->smarty->assign('submitted_email', '');
+        }
+            $this->smarty->assign('page_title', 'Register Account');
+            $this->smarty->assign('root_link', ROOT);
+            $this->smarty->assign('assets_link', ASSETS);
+            $this->smarty->display('auth/register.tpl');
+
+    }
+
+
+    public function login(){
+        $this->smarty->assign('page_title', 'Login');
+        $this->smarty->assign('root_link', ROOT);
+        $this->smarty->assign('assets_link', ASSETS);
+        $this->smarty->display('auth/login.tpl');
+
+    }
 }
+
 ```
 ### index.tpl
 ```tpl
